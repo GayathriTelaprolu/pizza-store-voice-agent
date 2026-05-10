@@ -48,8 +48,11 @@ def delete_session(call_sid: str):
 def add_order_item(session: Session, name: str, price: float, qty: int = 1, note: str = ""):
     for item in session.order:
         if item.name == name:
-            item.qty += qty
+            # Item already exists — only update note if provided, never increase qty
+            if note and not item.note:
+                item.note = note
             return
+    # New item — add it
     session.order.append(OrderItem(name=name, price=price, qty=qty, note=note))
 
 
